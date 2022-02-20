@@ -9,9 +9,17 @@ const corsOption = {
     origin:`${config.get('origin')}:${config.get('port')}`
 }
 
+const port = config.get('port')
+
 app.set('views', path.join(__dirname,'views'))
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors(corsOption))
+
+require('./startup/routes')(app)
+
+app.listen(port, ()=>{
+    winston.info("App running on "+port)
+})

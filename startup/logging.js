@@ -3,7 +3,7 @@ const winston = require('winston')
 //require('winston-mongodb')
 //const morgan = require('morgan')
 
-module.exports = function(app){
+module.exports = function(){ 
     /** winston.handleExceptions works for this
     process.on('uncaughtException',(ex)=>{
         console.log("An uncaught exception occured")
@@ -16,7 +16,7 @@ module.exports = function(app){
      */
     winston.handleExceptions(
         new winston.transports.Console({colorize:true,prettyPrint:true}),
-        new winston.transports.File({filename:'logs/uncaught-exceptions.log'})
+        new winston.transports.File({filename:'logger/uncaught-exceptions.log'})
     )
 
     process.on('unhandledRejection',(ex)=>{
@@ -25,6 +25,7 @@ module.exports = function(app){
         throw ex
     })
 
-    winston.add(winston.transports.File, {filename:'logs/errors.log'}) 
-    //winston.add(winston.transports.MongoDB, {db:'mongodb://localhost/playground'})
+    winston.add(new winston.transports.File({filename:'logger/errors.log'}))
+    winston.add(new winston.transports.Console({colorize:true,prettyPrint:true,errors:{stack:true},timestamp:true})) 
+    //winston.add(winston.transports.MongoDB, {db:'mongodb://localhost/playground'}) 
 }

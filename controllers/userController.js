@@ -17,7 +17,8 @@ class UserController {
             const users = await User.find().select('-password')
             return this.res.send(users)
         } catch (error) {
-            winston.error(new Error(error))
+            console.error(error)
+            winston.error(new Error(error))  
             return res.status(500).send("An error occured while fetching users")
         }
         
@@ -25,18 +26,25 @@ class UserController {
 
     async create(){
         try {
+            //console.log(this.body.address)
             const {error} = userRequest.validate(this.body)
-            if(error) return this.res.status(422).send(error.details[0].message)
+            if(error){
+                //console.log(error.details[0].message)
+                return this.res.status(422).send(error.details[0].message)
 
-            if(userRequest.emailExists()){
-                return this.res.send({success:false,message:"Email already exist"})
+            } 
+            const emailExists = await userRequest.emailExists(false,{email:this.body.email})
+            if(emailExists){
+                console.log(emailExists)
+                return this.res.status(422).send({message:"Email already exist"})
             }
 
             const user = await new User(this.body).save()
 
-            return this.res.send({success:true,user:user})
+            return this.res.send(user)
             
         } catch (error) {
+            console.error(error)
             winston.error(new Error(error))
             return this.res.status(500).send("An error occured while creating users")
         }

@@ -18,8 +18,12 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors(corsOption))
 
+require('./startup/logging')()
+require('./startup/db')()
 require('./startup/routes')(app)
 
-app.listen(port, ()=>{
+const server = app.listen(port, ()=>{
     winston.info("App running on "+port)
 })
+
+module.exports = server 

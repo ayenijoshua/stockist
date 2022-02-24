@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const UserController = require('../controllers/userController')
 const validateObjectId = require('../middlewares/validateObjectId')
+const validateUser = require('../middlewares/validateUser')
 
 //const controller = new UserController()
 
@@ -13,16 +14,16 @@ router.post('/',  (req,res)=>{
     new UserController(req,res).create()
 })
 
-router.put('/:id', validateObjectId, (req,res)=>{
-    return  new UserController(req,res).update()
+router.put('/:id', [validateObjectId,validateUser], (req,res)=>{
+    new UserController(req,res).update()
 })
 
 router.get('/:id', validateObjectId, (req,res)=>{
-    return  new UserController(req,res).show()
+    new UserController(req,res).show()
 })
 
 router.delete('/:id', validateObjectId, (req,res)=>{
-    return  new UserController(req,res).delete()
+    new UserController(req,res).delete()
 })
 
 module.exports = router

@@ -25,21 +25,23 @@ class ProductController {
 
     async create(){
         try {
-            console.log(this.body)
+            //console.log(this.body)
             const {error} = productRequest.validate(this.body)
             if(error) {
                 console.log(error.details[0].message)
                 return this.res.status(422).send(error.details[0].message)
             }
 
-            if(productRequest.nameExists()){
+            if(await productRequest.nameExists()){
+                console.error('name exist')
                 return this.res.status(422).send({message:"Product name already exist"})
             }
 
-            productRequest.uploadImage(this.req,this.res,(err)=>{
-                if(err) return this.res.status(422).send({message:err})
-                if(this.req.file == undefined) return this.res.status(422).send({message:"No file selected"})
-            })
+            const image = await productRequest.uploadImage(this.req.file)
+            if(!image.isValid){
+                console.error('Upload error '+image.message)
+                return this.res.status(422).send(image.message)
+            }
 
             let product = {
                 name:this.body.name,
@@ -47,16 +49,16 @@ class ProductController {
                 description: this.body.description,
                 quantity: this.body.quantity,
                 price: this.body.price,
-                imageName: this.req.file.filename
+                imageName: image.filename
             }
 
             product = await new Product(product).save()
 
-            console.log(product)
+            //console.log(product)
             return this.res.send(product)
             
         } catch (error) {
-            winston.error(new Error(error))
+            console.error(new Error(error))
             return this.res.status(500).send("An error occured while creating products")
         }
     }
@@ -76,14 +78,17 @@ class ProductController {
     async update(){
         try {
             const {error} = productRequest.validate(this.body)
-            if(error) return this.res.status(422).send(error.details[0].message)
-
-            if(productRequest.emailExists(true,this.id)){
-                return this.res.send({success:false,message:"Name already exist"})
+            if(error) {
+                console.error(error)
+                return this.res.status(422).send(error.details[0].message)
             }
 
+            // if(productRequest.emailExists(true,this.id)){
+            //     return this.res.send({success:false,message:"Name already exist"})
+            // }
+
             const product = await Product.findByIdAndUpdate(this.id,this.body)
-            if (!product) return this.res.status(404).send('Id not found')
+            //if (!product) return this.res.status(404).send('Id not found')
 
             return this.res.send(product)
 

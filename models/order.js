@@ -13,6 +13,10 @@ const orderSchema = mongoose.Schema(
             required:true,
             ref:'Product'
         },
+        status:{
+            type:String,
+            default:'unapproved'
+        }
     }
 )
 

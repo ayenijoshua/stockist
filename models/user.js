@@ -15,6 +15,7 @@ const userSchema = mongoose.Schema(
         },
         password:{
             type:String,
+            required:false
         },
         address:{
             type:String,
@@ -38,7 +39,11 @@ const userSchema = mongoose.Schema(
         isAdmin:{
             type:Boolean,
             default:false
-        }
+        },
+        created_at:{
+            type:Date,
+            default: Date.now
+        },
     }
 )
 

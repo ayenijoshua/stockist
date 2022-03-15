@@ -29,10 +29,10 @@ class ProductController {
             const {error} = productRequest.validate(this.body)
             if(error) {
                 console.log(error.details[0].message)
-                return this.res.status(422).send(error.details[0].message)
+                return this.res.status(422).send({message:error.details[0].message})
             }
 
-            if(await productRequest.nameExists()){
+            if(await productRequest.nameExists(this.body.name)){
                 console.error('name exist')
                 return this.res.status(422).send({message:"Product name already exist"})
             }
@@ -40,7 +40,7 @@ class ProductController {
             const image = await productRequest.uploadImage(this.req.file)
             if(!image.isValid){
                 console.error('Upload error '+image.message)
-                return this.res.status(422).send(image.message)
+                return this.res.status(422).send({message:image.message})
             }
 
             let product = {
@@ -59,7 +59,7 @@ class ProductController {
             
         } catch (error) {
             console.error(new Error(error))
-            return this.res.status(500).send("An error occured while creating products")
+            return this.res.status(500).send({message:"An error occured while creating products"})
         }
     }
 
@@ -80,19 +80,46 @@ class ProductController {
             const {error} = productRequest.validate(this.body)
             if(error) {
                 console.error(error)
-                return this.res.status(422).send(error.details[0].message)
+                return this.res.status(422).send({message:error.details[0].message})
             }
 
-            // if(productRequest.emailExists(true,this.id)){
-            //     return this.res.send({success:false,message:"Name already exist"})
-            // }
+            const updatedNameExists = await productRequest.updatedNameExists({name:this.body.name,id:this.id})
 
-            const product = await Product.findByIdAndUpdate(this.id,this.body)
-            //if (!product) return this.res.status(404).send('Id not found')
+            if(updatedNameExists){
+                return this.res.status(422).send({message:"Name already exist"})
+            }
 
-            return this.res.send(product)
+            let product = {
+                name:this.body.name,
+                title: this.body.title,
+                description: this.body.description,
+                quantity: this.body.quantity,
+                price: this.body.price,
+            }
+
+            if(this.req.file){
+                let image = await Product.findById(this.id)
+                if(image.imageName){
+                    productRequest.deleteUploadedImage(image.imageName)
+                }
+
+                image = await productRequest.uploadImage(this.req.file)
+                if(!image.isValid){
+                    console.error('Upload error '+image.message)
+                    return this.res.status(422).send({message:image.message})
+                }
+
+                product.imageName = image.filename
+            }
+
+            
+
+            const updatedProduct = await Product.findByIdAndUpdate(this.id,product)
+            
+            return this.res.send(updatedProduct)
 
         } catch (error) {
+            console.log(error)
             winston.error(new Error(error))
             return this.res.status(500).send("An error occured while updating product")
         }
@@ -100,10 +127,10 @@ class ProductController {
 
     async delete(){
         try {
-            const product = Product.findByIdAndRemove(this.id)
+            const product = await Product.findByIdAndRemove(this.id)
             if (!product) return this.res.status(404).send('Id not found')
 
-            this.res.send(product)
+            return this.res.send(product)
         } catch (error) {
             winston.error(new Error(error))
             return this.res.status(500).send("An error occured while deleting product")

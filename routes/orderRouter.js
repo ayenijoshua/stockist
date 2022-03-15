@@ -6,30 +6,14 @@ const multer = require('multer')
 
 const router = express.Router()
 
-const upload = multer({
-    //storage:storage,
-    limits:{fileSize:1000000},
-    fileFilter: function(req,file,cb){
-        checkFileType(file,cb)
-    }
-}).single('image')
-
-function checkFileType(file,cb){
-    const fileTypes = /jpeg|jpg|png|gif/
-    const extname = fileTypes.test(path.extname(file.originalname).toLocaleLowerCase())
-    const mimetype = fileTypes.test(file.mimetype)
-
-    if(mimetype && extname){
-        return cb(null,true)
-    }
-    cb('Error: only images are supported')
-}
+const upload = multer().single('image')
 
 router.get('/', (req,res)=>{
     new OrderCntroller(req,res).index()
 })
 
-router.post('/', upload, (req,res)=>{
+router.post('/', upload, async (req,res)=>{
+    //console.log(req.file)
     new OrderCntroller(req,res).create()
 })
 

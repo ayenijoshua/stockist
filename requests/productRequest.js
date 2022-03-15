@@ -55,23 +55,41 @@ module.exports = {
         return false
     },
 
+    async updatedNameExists(data){
+         let nameExists = await Product.findOne()
+         .and([{name:data.name} , {_id:{$ne:data.id}}])
+        if(nameExists){
+            return true
+        }
+        return false
+    },
+
     async uploadImage(file){
-        if(file==undefined){
+        //console.log(file)
+        if(!file){
             return {isValid:false,message:`image not found`}
         }
-        const allowedExt = ['jpg','jpeg','png','gif']
+        const allowedExt = ['.jpg','.jpeg','.png','.gif']
         const fileExt = file.detectedFileExtension
         //console.log('file '+file.toString())
         if(!allowedExt.includes(fileExt)){
             return {isValid:false,message:`image extension ${fileExt} is not supported`}
         }
 
-        const filename = `prod-${Math.floor(Math.random*1000)}${fileExt}`
+        const filename = `prod-${Math.floor(Math.random() * 1000)}${fileExt}`
         
         await pipeline(file.stream,fs.createWriteStream(`${__dirname}/../public/products/${filename}`))
 
         return {isValid:true,filename:filename}
-    }
+    },
+
+    async deleteUploadedImage(imageName){
+        fs.unlink(`${__dirname}/../public/products/${imageName}`,(err)=>{
+            if(err) console.error("image not found in directory")
+        })
+    },
+
+
 
 }
 

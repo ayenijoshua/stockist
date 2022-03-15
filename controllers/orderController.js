@@ -5,8 +5,10 @@ const winston = require('winston')
 const request = require('../requests/orderRequest')
 const mongoose = require('mongoose')
 const Fawn = require('fawn')
+const config = require('config');
 
-Fawn.init(mongoose)
+const db = config.get('db')
+Fawn.init(db)
 
 class OrderCntroller {
 
@@ -19,11 +21,11 @@ class OrderCntroller {
 
     async index(){
         try {
-            const orders = await Order.find().populate('products').populate('user')
+            const orders = await Order.find().populate('user')
             return this.res.send(orders)
         } catch (error) {
             console.error(error)
-            return res.status(500).send("An error occured while fetching products")
+            return res.status(500).send("An error occured while fetching orders")
         }
     }
 
@@ -32,20 +34,26 @@ class OrderCntroller {
         var user;
         var transact;
         try {
-            const {error} = request.validate(orderData)
-            if(error){
-                this.res.status(422).send(error.details[0].message)
+            let {orderError} = request.validateOrderData(orderData)
+            if(orderError){
+               return this.res.status(422).send({message:orderError.details[0].message})
             }
 
+            let {userError} = request.validateUserData(userData)
+            if(userError){
+                return this.res.status(422).send({message:userError.details[0].message})
+            }
+
+            //console.log(orderData)
+
             const prod = await request.productExists(orderData.products)
-            if(prod.inValid){
-                this.res.status(404).send(`Product ${prod.product} not found`)
+            if(!prod.isValid){
+               return this.res.status(422).send({message:`Product ${prod.product} not found`})
             }
 
             const userExists = await request.userExists(userData.email)
             if(!userExists){
                 //create user
-                
                 let newUser = {
                     name:userData.name,
                     email:userData.email,
@@ -64,18 +72,17 @@ class OrderCntroller {
                 user = userExists
             }
 
-            let pop = await request.uploadPop(this.res.file)
-            if(!pop.isValid){
-                return this.res.status(422).send(pop.message)
-            }
-
             const order = await new Order({
                 product:orderData.products,
-                user:user,
-                pop:pop.filename
+                user:user._id,
+                pop:pop.filename,
+                totalPrice:orderData.totalPrice,
+                totalQty:orderData.totalQty,
+                deliveryType:userData.delivery_type
             })
 
-            transact.save('orders',order).run()
+            transact.save('orders',order)
+            transact.run()
 
             return this.res.send(order)
 
@@ -145,6 +152,15 @@ class OrderCntroller {
             return this.res.status(500).send('An error occured while disapproving order')
         }
     }
+
+    async uplodPOP(){
+        let pop = await request.uploadPop(userData.image)
+        if(!pop.isValid){
+            return this.res.status(422).send({message:pop.message})
+        }
+    }
+
+    sy
 }
 
 module.exports = OrderCntroller

@@ -8,10 +8,25 @@ const pipeline = promisify(require('stream').pipeline)
 
 module.exports = {
 
-    validate(data){
+    validateUserData(data){
         const schema = Joi.object().keys({
-            user: Joi.string().required(),
-            product: Joi.string().required(),
+            name: Joi.string().required(),
+            email: Joi.string().required(),
+            phone: Joi.string().required(),
+            sponsorName:Joi.string().required(),
+            address: Joi.string().required(),
+            address: Joi.string().required(),
+            IdNumber: Joi.string().required(),
+        });
+        
+        return schema.validate(data); 
+    },
+
+    validateOrderData(data){
+        const schema = Joi.object().keys({
+            products:Joi.array().required(),
+            totalPrice: Joi.required(),
+            totalQty: Joi.required(),
         });
         
         return schema.validate(data); 
@@ -28,12 +43,12 @@ module.exports = {
 
     async productExists(products){
         for(let i=0; i<products.length; i++){
-            let prodExists = await Product.findOne({_id:products[i]})
+            let prodExists = await Product.findOne({_id:products[i].id})
             if(!prodExists){
-                return {product:products[i],invalid:true}
+                return {isValid:false,product:products[i].name}
             }
         }
-       return {inValid:true}
+       return {isValid:true}
     },
 
     checkStatus(data){
@@ -45,6 +60,9 @@ module.exports = {
     },
 
     async uploadPop(file){
+        if(!file || file== undefined){
+            return {isValid:false,message:`proof of payment not found`}
+        }
         const allowedExt = ['jpg','png','jpeg']
         const fileExt = file.detectedFileExtension
         if(! allowedExt.includes(fileExt)){

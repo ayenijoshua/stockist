@@ -3,6 +3,9 @@ const router = express.Router()
 const UserController = require('../controllers/userController')
 const validateObjectId = require('../middlewares/validateObjectId')
 const validateUser = require('../middlewares/validateUser')
+const multer = require('multer')
+
+const upload = multer().single('image')
 
 //const controller = new UserController()
 
@@ -10,7 +13,7 @@ router.get('/',  (req,res)=>{
     new UserController(req,res).index() 
 })
 
-router.post('/',  (req,res)=>{
+router.post('/', upload, (req,res)=>{
     new UserController(req,res).create()
 })
 

@@ -1,5 +1,9 @@
 const Joi = require('joi');
 const User = require('../models/user')
+const fs = require('fs');
+const { promisify } = require('util');
+const pipeline = promisify(require('stream').pipeline)
+
 module.exports = {
 
     validate(data){
@@ -10,7 +14,8 @@ module.exports = {
             state: Joi.string().required(),
             phone: Joi.string().required(),
             sponsorName: Joi.string().required(),
-            idNumber: Joi.string()
+            idNumber: Joi.string().required(),
+            deliveryType: Joi.string().required()
         });
         
         return schema.validate(data); 
@@ -22,13 +27,28 @@ module.exports = {
             userExists = await User.findOne({where:{email:data.email, _id:{$ne:data.id}}})
         }else{
             userExists = await User.findOne({where:{email:data.email}})
-            console.log(userExists)
         }
 
         if(userExists){
-            return true
+            return userExists
         }
         return false
+    },
+
+    async uploadTemporaryPop(file){
+        if(!file || file== undefined){
+            return {isValid:false,message:`proof of payment not found`}
+        }
+        const allowedExt = ['.jpg','.png','.jpeg']
+        const fileExt = file.detectedFileExtension
+        if(! allowedExt.includes(fileExt)){
+            return {isValid:false,message:`file extention ${fileExt} is not supported`,filename:null}
+        }
+
+        const filename = `pop-${Math.floor(Math.random() * 1000)}${fileExt}`
+        await pipeline(file.stream,fs.createWriteStream(`${__dirname}/../public/pops/${filename}`))
+
+        return {isValid:true,message:null,filename:filename}
     }
 
     

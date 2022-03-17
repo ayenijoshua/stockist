@@ -30,59 +30,56 @@ class OrderCntroller {
     }
 
     async create(){
-        const {userData,orderData} = this.body
-        var user;
-        var transact;
         try {
-            let {orderError} = request.validateOrderData(orderData)
+            let {orderError} = request.validateOrderData(this.body)
             if(orderError){
                return this.res.status(422).send({message:orderError.details[0].message})
             }
 
-            let {userError} = request.validateUserData(userData)
-            if(userError){
-                return this.res.status(422).send({message:userError.details[0].message})
-            }
+            // let {userError} = request.validateUserData(userData)
+            // if(userError){
+            //     return this.res.status(422).send({message:userError.details[0].message})
+            // }
 
             //console.log(orderData)
 
-            const prod = await request.productExists(orderData.products)
+            const prod = await request.productExists(this.body.products)
             if(!prod.isValid){
                return this.res.status(422).send({message:`Product ${prod.product} not found`})
             }
 
-            const userExists = await request.userExists(userData.email)
-            if(!userExists){
+            const user = await request.userExists(this.body.userId)
+            if(!user){
                 //create user
-                let newUser = {
-                    name:userData.name,
-                    email:userData.email,
-                    address:userData.address,
-                    sponsorName:userData.sponsorName,
-                    phone:userData.phone,
-                    idNumber:userData.idNumber,
-                    state:userData.state
-                }
-                user =  await new User(newUser) //await new UserController(user,this.res).create()
-                //emit order-created event
-                transact = new Fawn.Task()
-                .save('users',user)
+                // let newUser = {
+                //     name:userData.name,
+                //     email:userData.email,
+                //     address:userData.address,
+                //     sponsorName:userData.sponsorName,
+                //     phone:userData.phone,
+                //     idNumber:userData.idNumber,
+                //     state:userData.state
+                // }
+                return this.res.status(422).send({message:'User not found'})
+                // user =  await new User(newUser) //await new UserController(user,this.res).create()
+                // //emit order-created event
+                // transact = new Fawn.Task()
+                // .save('users',user)
 
-            }else{
-                user = userExists
             }
 
             const order = await new Order({
-                product:orderData.products,
+                products:this.body.products,
                 user:user._id,
-                pop:pop.filename,
-                totalPrice:orderData.totalPrice,
-                totalQty:orderData.totalQty,
-                deliveryType:userData.delivery_type
-            })
+                pop:user.temporaryPOP,
+                totalPrice:this.body.totalPrice,
+                totalQty:this.body.totalQty,
+                deliveryType:user.temporaryDeliveryType,
+            }).save()
 
-            transact.save('orders',order)
-            transact.run()
+            // transact.save('orders',order)
+            // transact.run()
+            
 
             return this.res.send(order)
 
@@ -153,14 +150,6 @@ class OrderCntroller {
         }
     }
 
-    async uplodPOP(){
-        let pop = await request.uploadPop(userData.image)
-        if(!pop.isValid){
-            return this.res.status(422).send({message:pop.message})
-        }
-    }
-
-    sy
 }
 
 module.exports = OrderCntroller

@@ -1,7 +1,6 @@
 const User = require('../models/user')
 const winston = require('winston')
 const userRequest = require('../requests/userRequest')
-const { findByIdAndRemove } = require('../models/user')
 
 class UserController {
 
@@ -30,18 +29,41 @@ class UserController {
             const {error} = userRequest.validate(this.body)
             if(error){
                 //console.log(error.details[0].message)
-                return this.res.status(422).send(error.details[0].message)
-
+                return this.res.status(422).send({message:error.details[0].message})
             } 
-            const emailExists = await userRequest.emailExists(false,{email:this.body.email})
-            if(emailExists){
-                console.log(emailExists)
-                return this.res.status(422).send({message:"Email already exist"})
+
+            const user = await userRequest.emailExists(false,{email:this.body.email})
+            if(user){
+                //console.log(emailExists)
+                const pop = await userRequest.uploadTemporaryPop(this.req.file)
+               if(! pop.isValid){
+                   return this.res.status(422).send({message:pop.message})
+               }
+
+                let updatedUser = await User.findByIdAndUpdate(user._id,{
+                    temporaryPOP:pop.filename,
+                    temporaryDeliveryType:this.body.deliveryType
+                })
+
+                if(! updatedUser){
+                    return this.res.status(422).send({message:'User not found'})
+                }
+
+                return this.res.send(user)
             }
 
-            const user = await new User(this.body).save()
+            const pop = await userRequest.uploadTemporaryPop(this.req.file)
+            if(! pop.isValid){
+                return this.res.status(422).send({message:pop.message})
+            }
+            this.body.temporaryPOP = pop.filename
+            this.body.temporaryDeliveryType = this.body.delivertType
 
-            return this.res.send(user)
+            delete this.body.deliveryType
+
+            const newUser = await new User(this.body).save()
+
+            return this.res.send(newUser)
             
         } catch (error) {
             console.error(error)

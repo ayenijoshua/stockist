@@ -10,7 +10,7 @@ const orderSchema = mongoose.Schema(
         },
         products:{
             type: [new mongoose.Schema({
-                _id:mongoose.Types.ObjectId,
+                id:mongoose.Types.ObjectId,
                 name:String,
                 price:Number,
                 qty:Number,
@@ -20,7 +20,7 @@ const orderSchema = mongoose.Schema(
         },
         status:{
             type:String,
-            default:'unapproved'
+            default:'pending'
         },
         deliveryType:{
             type: String,

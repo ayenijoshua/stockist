@@ -21,8 +21,12 @@ class OrderCntroller {
 
     async index(){
         try {
-            const orders = await Order.find().populate('user')
-            return this.res.send(orders)
+            let pageNum = this.query.pageNum || 1
+            let pageSize = this.query.pageSize || 10
+            let orders = await Order.find().populate('user')
+                .skip((pageNum-1)*pageSize)
+                .limit(pageSize)
+            return this.req.send(orders)
         } catch (error) {
             console.error(error)
             return res.status(500).send("An error occured while fetching orders")
@@ -149,6 +153,44 @@ class OrderCntroller {
             return this.res.status(500).send('An error occured while disapproving order')
         }
     }
+
+    async totalOrders(){
+        try {
+            let orders = await Order.count()
+            return this.res.send({total:orders})
+        } catch (error) {
+            console.error(new Error(error))
+            return this.res.status(500).send("An error occured while deleting user")
+        }
+    }
+
+    async totalSales(){
+        try {
+            let orders = await Order.aggregate([{$match:{}},
+                
+               { $group: {_id:null,totalSales:{$sum:"$totalPrice"}}}
+            ])
+            return this.res.send({total:orders[0].totalSales})
+        } catch (error) {
+            console.error(new Error(error))
+            return this.res.status(500).send("An error occured while deleting user")
+        }
+    }
+
+    async ordersByStatus(){
+        try {
+            let pageNum = this.query.pageNum || 1
+            let pageSize = this.query.pageSize || 10
+            let orders = await Order.find({status:this.params.status}).populate('user')
+                .skip((pageNum-1)*pageSize)
+                .limit(pageSize)
+            return this.res.send(orders)
+        } catch (error) {
+            console.error(error)
+            return this.res.status(500).send('An error occured while fetchiing pending order')
+        }
+    }
+
 
 }
 

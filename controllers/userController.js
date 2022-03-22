@@ -9,11 +9,16 @@ class UserController {
         this.res = res
         this.id = req.params.id
         this.body = req.body
+        this.query = req.query
     }
 
     async index(){
         try {
-            const users = await User.find().select('-password')
+            let pageNum = this.query.pageNum || 1
+            let pageSize = this.query.pageSize || 10
+            let users = await User.find().select('-password')
+                .skip((pageNum-1)*pageSize)
+                .limit(pageSize)
             return this.res.send(users)
         } catch (error) {
             console.error(error)
@@ -113,6 +118,16 @@ class UserController {
         } catch (error) {
             winston.error(new Error(error))
             return this.res.status(500).send("An error occured while deleting user")
+        }
+    }
+
+    async totalUsers(){
+        try {
+            let users = await User.find().count()
+            return this.res.send({total:users})
+        } catch (error) {
+            console.error(new Error(error))
+            return this.res.status(500).send("An error occured while counting user")
         }
     }
 }

@@ -49,7 +49,7 @@ module.exports = {
         await pipeline(file.stream,fs.createWriteStream(`${__dirname}/../public/pops/${filename}`))
 
         return {isValid:true,message:null,filename:filename}
-    }
+    },
 
     
 

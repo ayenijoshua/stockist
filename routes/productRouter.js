@@ -40,4 +40,8 @@ router.delete('/:id', [validateObjectId,validateProduct], (req,res)=>{
     new ProductController(req,res).delete()
 })
 
+router.get('/total', (req,res)=>{
+    new ProductController(req,res).totalProducts()
+})
+
 module.exports = router

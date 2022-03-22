@@ -10,17 +10,21 @@ class ProductController {
         this.res = res
         this.id = req.params.id
         this.body = req.body
+        this.query = req.query
     }
 
     async index(){
         try {
-            const products = await Product.find()
+            let pageNum = this.query.pageNum || 1
+            let pageSize = this.query.pageSize || 10
+            let products = await Product.find()
+                .skip((pageNum-1)*pageSize)
+                .limit(pageSize)
             return this.res.send(products)
         } catch (error) {
             winston.error(new Error(error))
             return res.status(500).send("An error occured while fetching products")
         }
-        
     }
 
     async create(){
@@ -134,6 +138,16 @@ class ProductController {
         } catch (error) {
             winston.error(new Error(error))
             return this.res.status(500).send("An error occured while deleting product")
+        }
+    }
+
+    async totalProducts(){
+        try {
+            let products = await Product.find().count()
+            return this.req.send(products)
+        } catch (error) {
+            winston.error(new Error(error))
+            return this.res.status(500).send("An error occured while deleting user")
         }
     }
 }

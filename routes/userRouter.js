@@ -9,6 +9,10 @@ const upload = multer().single('image')
 
 //const controller = new UserController()
 
+router.get('/total', (req,res)=>{
+    new UserController(req,res).totalUsers()
+})
+
 router.get('/',  (req,res)=>{
     new UserController(req,res).index() 
 })
@@ -28,5 +32,8 @@ router.get('/:id', validateObjectId, (req,res)=>{
 router.delete('/:id', validateObjectId, (req,res)=>{
     new UserController(req,res).delete()
 })
+
+
+
 
 module.exports = router

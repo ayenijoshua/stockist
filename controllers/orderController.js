@@ -170,7 +170,10 @@ class OrderCntroller {
                 
                { $group: {_id:null,totalSales:{$sum:"$totalPrice"}}}
             ])
-            return this.res.send({total:orders[0].totalSales})
+            if(orders.length>0){
+                return this.res.send({total:orders[0].totalSales})
+            }
+            return this.res.send({total:0})
         } catch (error) {
             console.error(new Error(error))
             return this.res.status(500).send("An error occured while deleting user")

@@ -26,7 +26,7 @@ class OrderCntroller {
             let orders = await Order.find().populate('user')
                 .skip((pageNum-1)*pageSize)
                 .limit(pageSize)
-            return this.req.send(orders)
+            return this.res.send(orders)
         } catch (error) {
             console.error(error)
             return res.status(500).send("An error occured while fetching orders")

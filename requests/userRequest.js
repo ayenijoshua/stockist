@@ -21,6 +21,20 @@ module.exports = {
         return schema.validate(data); 
     },
 
+    validateRegistration(data){
+        const schema = Joi.object().keys({
+            name: Joi.string().min(5).max(50).required(),
+            email: Joi.string().email().required(),
+            address: Joi.string().max(100).required(),
+            state: Joi.string().required(),
+            phone: Joi.string().required(),
+            sponsorName: Joi.string().required(),
+            idNumber: Joi.string().required(),
+        });
+        
+        return schema.validate(data); 
+    },
+
     async emailExists(isUpdate=false,data){
         let userExists;
         if(isUpdate && data){

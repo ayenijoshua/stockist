@@ -3,6 +3,8 @@ const users = require('../routes/userRouter')
 const products = require('../routes/productRouter')
 const orders = require('../routes/orderRouter')
 const frontPageMessage = require('../routes/frontPageRouterMessage')
+const bank = require('../routes/bankRouter')
+const companyContact = require('../routes/companyContactRouter')
 
 module.exports = function(app){
     app.use('/',web)
@@ -10,4 +12,6 @@ module.exports = function(app){
     app.use('/api/v1/products',products)
     app.use('/api/v1/orders',orders)
     app.use('/api/v1/front-page-message',frontPageMessage)
+    app.use('/api/v1/banks',bank)
+    app.use('/api/v1/company-contact',companyContact)
 }

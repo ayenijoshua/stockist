@@ -6,7 +6,6 @@ class FrontPageMessage {
 
     async create(req,res){
         try {
-            console.log(req.body)
             const {error} = request.validate(req.body)
             if(error) return res.status(422).send({message:error.details[0].message})
             const messag = await message.find()

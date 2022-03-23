@@ -49,6 +49,9 @@ const userSchema = mongoose.Schema(
         },
         temporaryDeliveryType:{
             type:String
+        },
+        token:{
+            type:String
         }
     }
 )

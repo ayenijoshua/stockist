@@ -13,8 +13,7 @@ const uploadStorage = multer.diskStorage({
         cb(null, './public/products/')
     },
     filename: (req, file, cb)=> {
-        const fileExt = file.mimetype.split('/')[1]
-        console.log('file '+fileExt)
+        const fileExt = '.'+file.mimetype.split('/')[1]
         cb(null, Date.now() + '-' + `prod-${Math.floor(Math.random() * 1000)}${fileExt}`)
     }
 })

@@ -65,22 +65,22 @@ module.exports = {
     },
 
     async uploadImage(file){
-        //console.log(file)
+        console.log(file)
         if(!file){
             return {isValid:false,message:`image not found`}
         }
         const allowedExt = ['.jpg','.jpeg','.png','.gif']
-        const fileExt = file.detectedFileExtension
-        //console.log('file '+file.toString())
-        if(!allowedExt.includes(fileExt)){
+        const fileExt = file.mimetype.split('/')[1]
+        console.log('file '+fileExt)
+        if(!allowedExt.includes('.'+fileExt)){
             return {isValid:false,message:`image extension ${fileExt} is not supported`}
         }
 
-        const filename = `prod-${Math.floor(Math.random() * 1000)}${fileExt}`
-        
-        await pipeline(file.stream,fs.createWriteStream(`${__dirname}/../public/products/${filename}`))
+        //const filename = `prod-${Math.floor(Math.random() * 1000)}${fileExt}`
+        //fs.writeFileSync(`${__dirname}/../public/products/${file.filename}`)
+        //await pipeline(file.stream,fs.createWriteStream(`${__dirname}/../public/products/${filename}`))
 
-        return {isValid:true,filename:filename}
+        return {isValid:true,filename:file.filename}
     },
 
     async deleteUploadedImage(imageName){

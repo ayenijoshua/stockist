@@ -41,11 +41,11 @@ class ProductController {
                 return this.res.status(422).send({message:"Product name already exist"})
             }
 
-            const image = await productRequest.uploadImage(this.req.file)
-            if(!image.isValid){
-                console.error('Upload error '+image.message)
-                return this.res.status(422).send({message:image.message})
-            }
+            // const image = await productRequest.uploadImage(this.req.file)
+            // if(!image.isValid){
+            //     console.error('Upload error '+image.message)
+            //     return this.res.status(422).send({message:image.message})
+            // }
 
             let product = {
                 name:this.body.name,
@@ -53,7 +53,7 @@ class ProductController {
                 description: this.body.description,
                 quantity: this.body.quantity,
                 price: this.body.price,
-                imageName: image.filename
+                imageName: this.req.file.filename
             }
 
             product = await new Product(product).save()

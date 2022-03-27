@@ -38,32 +38,32 @@ class UserController {
                 return this.res.status(422).send({message:error.details[0].message})
             } 
 
-            const user = await userRequest.emailExists(false,{email:this.body.email})
-            if(user){
-                //console.log(emailExists)
-            //     const pop = await userRequest.uploadTemporaryPop(this.req.file)
-            //    if(! pop.isValid){
-            //        return this.res.status(422).send({message:pop.message})
-            //    }
+            // const user = await userRequest.emailExists(false,{email:this.body.email})
+            // if(user){
+            //     //console.log(emailExists)
+            // //     const pop = await userRequest.uploadTemporaryPop(this.req.file)
+            // //    if(! pop.isValid){
+            // //        return this.res.status(422).send({message:pop.message})
+            // //    }
 
-                let updatedUser = await User.findByIdAndUpdate(user._id,{
-                    temporaryPOP:this.req.file.filename,
-                    temporaryDeliveryType:this.body.deliveryType
-                })
+            //     let updatedUser = await User.findByIdAndUpdate(user._id,{
+            //         temporaryPOP:this.req.file.filename,
+            //         temporaryDeliveryType:this.body.deliveryType
+            //     })
 
-                if(! updatedUser){
-                    return this.res.status(422).send({message:'User not found'})
-                }
+            //     if(! updatedUser){
+            //         return this.res.status(422).send({message:'User not found'})
+            //     }
 
-                return this.res.send(user)
-            }
+            //     return this.res.send(user)
+            // }
 
             // const pop = await userRequest.uploadTemporaryPop(this.req.file)
             // if(! pop.isValid){
             //     return this.res.status(422).send({message:pop.message})
             // }
             this.body.temporaryPOP = this.req.file.filename
-            this.body.temporaryDeliveryType = this.body.delivertType
+            this.body.temporaryDeliveryType = this.body.deliveryType
 
             delete this.body.deliveryType
 

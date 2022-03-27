@@ -40,7 +40,7 @@ module.exports = {
         if(isUpdate && data){
             userExists = await User.findOne({where:{email:data.email, _id:{$ne:data.id}}})
         }else{
-            userExists = await User.findOne({where:{email:data.email}})
+            userExists = await User.findOne({email:data.email})
         }
 
         if(userExists){

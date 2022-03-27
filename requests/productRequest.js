@@ -85,7 +85,8 @@ module.exports = {
 
     async deleteUploadedImage(imageName){
         fs.unlink(`${__dirname}/../public/products/${imageName}`,(err)=>{
-            if(err) console.error("image not found in directory")
+            if(err) {console.error("image not found in directory")}
+            else{console.info(imageName+' has been deleted')}
         })
     },
 

@@ -8,6 +8,15 @@ const router = express.Router()
 
 const upload = multer().single('image')
 
+
+router.post('/search', (req,res)=>{
+    new OrderController(req,res).searchOrder()
+})
+
+router.get('/graph', (req,res)=>{
+    new OrderController(req,res).graph()
+})
+
 router.get('/total', (req,res)=>{
     new OrderController(req,res).totalOrders()
 })

@@ -14,7 +14,7 @@ class contactController {
 
     async index(){
         try {
-            let contact = await CompanyContact.find()
+            let contact = await CompanyContact.find().select(['-_id','-__v'])
             if(contact.length > 0){
                 contact = contact[0]
             }
@@ -36,6 +36,8 @@ class contactController {
             let contacts = await CompanyContact.find()
             if(contacts.length > 0){
                 let contact = await CompanyContact.findByIdAndUpdate(contacts[0]._id,this.req.body)
+                delete contact._id
+                delete contact.__v
                 return this.res.send(contact)
             }
 

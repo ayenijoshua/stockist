@@ -6,6 +6,7 @@ const request = require('../requests/orderRequest')
 const mongoose = require('mongoose')
 const Fawn = require('fawn')
 const config = require('config');
+const { map } = require('lodash')
 
 const db = config.get('db')
 Fawn.init(db)
@@ -167,7 +168,6 @@ class OrderCntroller {
     async totalSales(){
         try {
             let orders = await Order.aggregate([{$match:{}},
-                
                { $group: {_id:null,totalSales:{$sum:"$totalPrice"}}}
             ])
             if(orders.length>0){
@@ -191,6 +191,33 @@ class OrderCntroller {
         } catch (error) {
             console.error(error)
             return this.res.status(500).send('An error occured while fetchiing pending order')
+        }
+    }
+
+    async searchOrder(){
+        try {
+            let orders = await Order.find({created_at:{$gte:new Date(this.body.from_date).toISOString(), 
+                $lt:new Date(this.body.to_date).toISOString()}}).populate('user').select(['-token','-password'])
+            return this.res.send(orders)
+        } catch (error) {
+            console.error(error)
+            return this.res.status(500).send('An error occured while searching order')
+        }
+    }
+
+    async graph(){
+        try {
+            let orders = await Order.aggregate([{$match:{status:'approved'}},
+                { $group: {_id:"$created_at",totalSales:{$sum:"$totalPrice"}}}
+             ])
+             //new Date().toDateString()
+             let formatedOrder = orders.map(function(ele){
+                 return [new Date(ele._id).toISOString().slice(0,10), ele.totalSales]
+             })
+             return this.res.send(formatedOrder)
+        } catch (error) {
+            console.error(error)
+            return this.res.status(500).send('An error occured while getting graph')
         }
     }
 

@@ -29,23 +29,17 @@ class ProductController {
 
     async create(){
         try {
-            //console.log(this.body)
             const {error} = productRequest.validate(this.body)
             if(error) {
-                console.log(error.details[0].message)
+                //console.log(error.details[0].message)
+                productRequest.deleteUploadedImage(this.req.file.filename)
                 return this.res.status(422).send({message:error.details[0].message})
             }
 
             if(await productRequest.nameExists(this.body.name)){
-                console.error('name exist')
+                productRequest.deleteUploadedImage(this.req.file.filename)
                 return this.res.status(422).send({message:"Product name already exist"})
             }
-
-            // const image = await productRequest.uploadImage(this.req.file)
-            // if(!image.isValid){
-            //     console.error('Upload error '+image.message)
-            //     return this.res.status(422).send({message:image.message})
-            // }
 
             let product = {
                 name:this.body.name,
@@ -58,7 +52,6 @@ class ProductController {
 
             product = await new Product(product).save()
 
-            //console.log(product)
             return this.res.send(product)
             
         } catch (error) {
@@ -107,16 +100,14 @@ class ProductController {
                     productRequest.deleteUploadedImage(image.imageName)
                 }
 
-                image = await productRequest.uploadImage(this.req.file)
-                if(!image.isValid){
-                    console.error('Upload error '+image.message)
-                    return this.res.status(422).send({message:image.message})
-                }
+                // image = await productRequest.uploadImage(this.req.file)
+                // if(!image.isValid){
+                //     console.error('Upload error '+image.message)
+                //     return this.res.status(422).send({message:image.message})
+                // }
 
-                product.imageName = image.filename
+                product.imageName = this.req.file.filename
             }
-
-            
 
             const updatedProduct = await Product.findByIdAndUpdate(this.id,product)
             

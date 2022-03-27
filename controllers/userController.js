@@ -34,19 +34,20 @@ class UserController {
             const {error} = userRequest.validate(this.body)
             if(error){
                 //console.log(error.details[0].message)
+                userRequest.deleteUploadedImage(this.req.file.filename)
                 return this.res.status(422).send({message:error.details[0].message})
             } 
 
             const user = await userRequest.emailExists(false,{email:this.body.email})
             if(user){
                 //console.log(emailExists)
-                const pop = await userRequest.uploadTemporaryPop(this.req.file)
-               if(! pop.isValid){
-                   return this.res.status(422).send({message:pop.message})
-               }
+            //     const pop = await userRequest.uploadTemporaryPop(this.req.file)
+            //    if(! pop.isValid){
+            //        return this.res.status(422).send({message:pop.message})
+            //    }
 
                 let updatedUser = await User.findByIdAndUpdate(user._id,{
-                    temporaryPOP:pop.filename,
+                    temporaryPOP:this.req.file.filename,
                     temporaryDeliveryType:this.body.deliveryType
                 })
 
@@ -57,11 +58,11 @@ class UserController {
                 return this.res.send(user)
             }
 
-            const pop = await userRequest.uploadTemporaryPop(this.req.file)
-            if(! pop.isValid){
-                return this.res.status(422).send({message:pop.message})
-            }
-            this.body.temporaryPOP = pop.filename
+            // const pop = await userRequest.uploadTemporaryPop(this.req.file)
+            // if(! pop.isValid){
+            //     return this.res.status(422).send({message:pop.message})
+            // }
+            this.body.temporaryPOP = this.req.file.filename
             this.body.temporaryDeliveryType = this.body.delivertType
 
             delete this.body.deliveryType

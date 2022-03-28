@@ -11,7 +11,7 @@ router.post('/register', (req,res)=>{
     new AuthController(req,res).register()
 })
 
-router.post('/logout', autTtoken, (req,res)=>{
+router.post('/logout', (req,res)=>{
     new AuthController(req,res).logout()
 })
 

@@ -369,36 +369,35 @@
 <!--/ Client Feedback-->
 	<section class="subscrive">
 		<div class="container">
-			<form>
+			<!-- <form>
 				<div class="row">
 				  <div class="col-md-4 form-group">
 					<input type="text" class="form-control" placeholder="Your Full Name" onfocus="this.placeholder=''"
 					  onblur="this.placeholder='Your Full Name'">
-				  </div> <!-- form-group end.// -->
+				  </div> 
 				  <div class="col-md-4 form-group">
 					<input type="text" class="form-control" placeholder=" Your Email Address" onfocus="this.placeholder=''"
 					  onblur="this.placeholder=' Your Email Address'">
-				  </div> <!-- form-group end.// -->
-				  <div class="col-md-4 form-group">
+				  </div> 				  
+          <div class="col-md-4 form-group">
 					<input type="text" class="form-control" placeholder=" Your Phone Number" onfocus="this.placeholder=''"
 					  onblur="this.placeholder=' Your Phone Number'">
-				  </div> <!-- form-group end.// -->
-				  <div class="col-md-12 form-group">
+				  </div> 				  
+          <div class="col-md-12 form-group">
 					<input type="text" class="form-control" placeholder=" Your Address" onfocus="this.placeholder=''"
 					  onblur="this.placeholder=' Your Address'">
-				  </div> <!-- form-group end.// -->
-				  <div class="col-md-4 form-group">
+				  </div> 				  <div class="col-md-4 form-group">
 					<input type="text" class="form-control" placeholder="Package" onfocus="this.placeholder=''"
 					  onblur="this.placeholder='Select Package'">
-				  </div> <!-- form-group end.// -->
+				  </div> 
 				  <div class="col-md-4 form-group">
 					<input type="text" class="form-control" placeholder=" Amount Paid" onfocus="this.placeholder=''"
 					  onblur="this.placeholder=' Amount Paid'">
-				  </div> <!-- form-group end.// -->
+				  </div> 
 				  <div class="col-md-4 form-group">
 				    <input type="date" id="start" class="form-control " style="" name="trip-start" required  onfocus="this.placeholder=''"
 					  onblur="this.placeholder=' Date'">
-				  </div> <!-- form-group end.// -->
+				  </div> 
 				  <div class="col-md-6 form-group">
 						<select name="bank_name" class="form-control" onfocus="this.placeholder=''"
 					  onblur="this.placeholder='Bank'">
@@ -429,33 +428,33 @@
 							<option value="Polaris Bank"> Polaris Bank </option>
 							<option value="Union Bank"> Union Bank </option>
 						</select> 
-				  </div> <!-- form-group end.// -->
+				  </div> 
 				  <div class="col-md-6 form-group">
 					<input type="text" class="form-control" placeholder="Account Number" onfocus="this.placeholder=''"
 					  onblur="this.placeholder=' Account Number'">
-				  </div> <!-- form-group end.// -->
+				  </div> 
 					<br><br>	
 					<div class="col-md-6 form-group">
 					<input type="text" class="form-control" placeholder="Sponsor Name" onfocus="this.placeholder=''"
 					  onblur="this.placeholder='Sponsor Name'">
-				  </div> <!-- form-group end.// -->
+				  </div> 
 				  <div class="col-md-6 form-group">
 					<input type="text" class="form-control" placeholder="Sponsor Username" onfocus="this.placeholder=''"
 					  onblur="this.placeholder=' Sponsor Username'">
-				  </div> <!-- form-group end.// -->
+				  </div> 
 				  <div class="col-md-4 form-group">
 					<input type="text" class="form-control" placeholder=" Sponsor Phone Number" onfocus="this.placeholder=''"
 					  onblur="this.placeholder=' Sponsor Phone Number'">
-				  </div> <!-- form-group end.// -->	
+				  </div> 	
 				  <div class="col-md-4 form-group">
 					<input type="text" class="form-control" placeholder="Sponsor Email" onfocus="this.placeholder=''"
 					  onblur="this.placeholder=' Sponsor Email'">
-				  </div> <!-- form-group end.// -->					  
+				  </div> 					  
 				  <div class="col-md-4 form-group">
 					<button type="submit" class="btn btn-primary btn-block sub-btn" disabled> Register </button> 
-				  </div> <!-- form-group// -->
-				</div> <!-- form-row end.// -->
-			</form>
+				  </div> 
+				</div> 
+			</form> -->
 		</div>	
 	</section>	
 
@@ -615,6 +614,28 @@ Here are some of the best natural products from LILONG group for your healthy co
 
 <!-- Footer Section-->
 
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <br><br><br><br><br>
+  <div class="modal-dialog" style="overflow:auto !important;">
+      <div class="modal-content">
+      <div class="card">
+        <div class="card-header">
+            <h4 class="text-center"><img src="assets/img/logo1a.png"></h4>
+            <h4 class="text-center"><% if(msg.option=='enable') { %> <%=msg.subject%> <% } %></h4>
+        </div>
+        <div class="card-body">
+        <div class="ibox-content modalContent" id="modalContent">
+          <% if(msg.option=='enable') { %> <%=msg.message%> <% } %>
+        </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div>
+</div>
+
 <footer>
   <p class="wow fadeInUp" data-wow-delay=".4s">	&#169; Copyright <%= new Date().getYear()  %> All Rights Reserved By 
     <a href="https://lilonghero.com/">Lilonghero.</a>
@@ -652,6 +673,13 @@ Here are some of the best natural products from LILONG group for your healthy co
   <script src="assets/js/chart-activetion.js"></script>
   <!-- Main Script -->
   <script src="assets/js/theme.js"></script>
+
+  <script type="text/javascript">
+    <% if(msg.option=='enable') { %>
+        $('#logoutModal').modal('show');
+    <% }else { %>
+      <% } %>
+  </script>
 
 </body>
 </html>

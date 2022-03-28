@@ -621,11 +621,11 @@ Here are some of the best natural products from LILONG group for your healthy co
       <div class="card">
         <div class="card-header">
             <h4 class="text-center"><img src="assets/img/logo1a.png"></h4>
-            <h4 class="text-center"><% if(msg.option != undefined && msg.option=='enable') { %> <%=msg.subject%> <% } %></h4>
+            <h4 class="text-center"><% if(available) { %> <%=msg.subject%> <% } %></h4>
         </div>
         <div class="card-body">
         <div class="ibox-content modalContent" id="modalContent">
-          <% if(msg.option != undefined && msg.option=='enable') { %> <%=msg.message%> <% } %>
+          <% if(available) { %> <%=msg.message%> <% } %>
         </div>
         </div>
       </div>
@@ -675,7 +675,7 @@ Here are some of the best natural products from LILONG group for your healthy co
   <script src="assets/js/theme.js"></script>
 
   <script type="text/javascript">
-    <% if(msg.option=='enable') { %>
+    <% if(available && msg.option=='enable') { %>
         $('#logoutModal').modal('show');
     <% }else { %>
       <% } %>

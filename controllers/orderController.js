@@ -133,10 +133,29 @@ class OrderCntroller {
 
     async approveOrder(){
         try {
-            const order = await Order.findByIdAndUpdate(this.params.id,{
+            const order = await Order.findById(this.params.id)
+            //const process = new Promise((res,rej)=>{
+                order.products.forEach(async ele=>{
+                    let product =  await Product.findById(ele.id)
+                    if(!product){
+                        throw new Error("Unable to find product to be updated")
+                    }
+                     let newQty = product.quantity - ele.qty
+                     let updtProd = await Product.findByIdAndUpdate(product._id,{quantity:newQty})
+                    if(!updtProd){
+                         throw new Error("Unable to update product")
+                    }
+                     //res()
+                 })
+            //})
+            await Order.findByIdAndUpdate(this.params.id,{
                 status:'approved'
             })
-            return this.res.send()
+
+            //process.then(function(){
+                return this.res.send()
+            //})
+            
         } catch (error) {
             console.error(error)
             return this.res.status(500).send('An error occured while approving order')

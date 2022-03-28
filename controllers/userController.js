@@ -68,8 +68,8 @@ class UserController {
             delete this.body.deliveryType
 
             const newUser = await new User(this.body).save()
-
-            return this.res.send(newUser)
+            const respUser = await User.findById(newUser._id).select(['-password','-token'])
+            return this.res.send(respUser)
             
         } catch (error) {
             console.error(error)

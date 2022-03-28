@@ -9,7 +9,7 @@ class WebController {
         try {
             const messge = await message.find()
             let messageAvailable = false
-            if(messge != undefined){
+            if(messge[0]){
                 messageAvailable = true
             }
             return res.render('index',{msg:messge[0],available:messageAvailable})

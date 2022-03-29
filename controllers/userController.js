@@ -124,8 +124,19 @@ class UserController {
 
     async totalUsers(){
         try {
-            let users = await User.find().count()
-            return this.res.send({total:users})
+            // let users = await User.aggregate([
+            //     {
+            //         $match:{
+            //             idNumber:{$not:{$size:0}}
+            //         }
+            //     },
+            //     {$unwind: "$idNumber"},
+            //     {
+            //         $group:{_id:"$idNumber",total:{$count:"$idNumber"}}
+            //     }
+            // ]) //await User.find().count()
+            let users = await User.find().distinct('idNumber')
+            return this.res.send({total:users.length})
         } catch (error) {
             console.error(new Error(error))
             return this.res.status(500).send("An error occured while counting user")

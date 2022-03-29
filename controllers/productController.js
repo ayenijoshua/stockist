@@ -141,6 +141,48 @@ class ProductController {
             return this.res.status(500).send("An error occured while deleting user")
         }
     }
+
+    /**
+     * validate products in carts
+     * @returns res
+     */
+    async validate(){
+        try {
+            for(let i=0; i<this.body.products.length; i++){
+                let prodExists = await Product.findOne({_id:this.body.products[i]})
+                if(!prodExists){
+                    return this.res.status(400).send({message:"Some of the products are invalid"})
+                }
+            }
+           return this.res.send()
+        } catch (error) {
+            console.log(error)
+            return this.res.status(500).send("An error occured while validating product")
+        }
+    }
+
+    /**
+     * validate quantity of products in order
+     * @returns response
+     */
+    async validateQty(){
+        try {
+            for(let i=0; i<this.body.products.length; i++){
+                let prod = await Product.findOne({_id:this.body.products[i].id})
+                if(!prod){
+                    return this.res.status(400).send({message:"Some of the products are invalid"})
+                }
+                if(prod.quantity < this.body.products[i].qty){
+                    return this.res.status(400).send({message:`Product ${this.body.products[i].name}'s quantity 
+                    should not be more than ${prod.quantity}, please remove and add an appropriate quantity` })
+                }
+            }
+           return this.res.send()
+        } catch (error) {
+            console.log(error)
+            return this.res.status(500).send("An error occured while validating product")
+        }
+    }
 }
 
 module.exports = ProductController

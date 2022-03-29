@@ -36,6 +36,14 @@ function checkFileType(file,cb){
     cb('Error: only images are supported')
 }
 
+router.post('/validate', (req,res)=>{
+    new ProductController(req,res).validate()
+})
+
+router.post('/validateQty', (req,res)=>{
+    new ProductController(req,res).validateQty()
+})
+
 router.get('/', (req,res)=>{
     new ProductController(req,res).index()
 })

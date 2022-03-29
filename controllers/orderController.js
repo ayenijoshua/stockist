@@ -176,7 +176,7 @@ class OrderCntroller {
 
     async totalOrders(){
         try {
-            let orders = await Order.count()
+            let orders = await Order.count({status:'approved'})
             return this.res.send({total:orders})
         } catch (error) {
             console.error(new Error(error))
@@ -186,7 +186,7 @@ class OrderCntroller {
 
     async totalSales(){
         try {
-            let orders = await Order.aggregate([{$match:{}},
+            let orders = await Order.aggregate([{$match:{status:'approved'}},
                { $group: {_id:null,totalSales:{$sum:"$totalPrice"}}}
             ])
             if(orders.length>0){

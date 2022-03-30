@@ -15,7 +15,7 @@ class UserController {
     async index(){
         try {
             let pageNum = this.query.pageNum || 1
-            let pageSize = this.query.pageSize || 10
+            let pageSize = this.query.pageSize || 100
             let users = await User.find().select('-password')
                 .skip((pageNum-1)*pageSize)
                 .limit(pageSize)
@@ -135,7 +135,7 @@ class UserController {
             //         $group:{_id:"$idNumber",total:{$count:"$idNumber"}}
             //     }
             // ]) //await User.find().count()
-            let users = await User.find().distinct('idNumber')
+            let users = await User.find({isAdmin:false}).distinct('idNumber')
             return this.res.send({total:users.length})
         } catch (error) {
             console.error(new Error(error))

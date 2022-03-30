@@ -24,7 +24,7 @@ const orderSchema = mongoose.Schema(
         },
         deliveryType:{
             type: String,
-            enum:['pickup','address'],
+            enum:['pickup from store','deliver to my location'],
             required:true
         },
         pop:{

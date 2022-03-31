@@ -16,7 +16,7 @@ class UserController {
         try {
             let pageNum = this.query.pageNum || 1
             let pageSize = this.query.pageSize || 100
-            let users = await User.find().select('-password')
+            let users = await User.find().select(['-password','-token'])
                 .skip((pageNum-1)*pageSize)
                 .limit(pageSize)
             return this.res.send(users)
@@ -80,7 +80,7 @@ class UserController {
 
     async show(){
         try {
-            const user = await User.findById(this.id).select('-password')
+            const user = await User.findById(this.id).select(['-password','-token'])
             if (!user) return this.res.status(404).send('Id not found')
 
             return this.res.send(user)

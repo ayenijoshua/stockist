@@ -23,8 +23,8 @@ class OrderCntroller {
     async index(){
         try {
             let pageNum = this.query.pageNum || 1
-            let pageSize = this.query.pageSize || 10
-            let orders = await Order.find().populate('user')
+            let pageSize = this.query.pageSize || 100
+            let orders = await Order.find().populate('user').select(['-password','-token'])
                 .skip((pageNum-1)*pageSize)
                 .limit(pageSize)
             return this.res.send(orders)
@@ -202,8 +202,8 @@ class OrderCntroller {
     async ordersByStatus(){
         try {
             let pageNum = this.query.pageNum || 1
-            let pageSize = this.query.pageSize || 10
-            let orders = await Order.find({status:this.params.status}).populate('user')
+            let pageSize = this.query.pageSize || 100
+            let orders = await Order.find({status:this.params.status}).populate('user').select(['-password','-token'])
                 .skip((pageNum-1)*pageSize)
                 .limit(pageSize)
             return this.res.send(orders)
@@ -216,7 +216,7 @@ class OrderCntroller {
     async searchOrder(){
         try {
             let orders = await Order.find({created_at:{$gte:new Date(this.body.from_date).toISOString(), 
-                $lt:new Date(this.body.to_date).toISOString()}}).populate('user').select(['-token','-password'])
+                $lte:new Date(this.body.to_date).toISOString()}}).populate('user').select(['-token','-password'])
             return this.res.send(orders)
         } catch (error) {
             console.error(error)

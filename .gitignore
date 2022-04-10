@@ -4,6 +4,6 @@ coverage/
 logs/
 logger/
 tests/images
-public/pops
-public/products
+public/pops/
+public/products/
 uploads

@@ -1,5 +1,6 @@
-const User = require('../models/user')
-const userRequest = require('../requests/userRequest')
+const User = require('../models/registeredUser')
+const RegisteredUser = require('../models/registeredUser')
+const request = require('../requests/registeredUserRequest')
 
 class AuthController {
 
@@ -17,8 +18,8 @@ class AuthController {
             if(!authUser){
                return  this.res.status(422).send({message:'User Email not found'})
             }
-            authUser = await User.findOne({password:this.body.password})
-            if(!authUser){
+            let pass = await User.findOne({password:this.body.password})
+            if(!pass){
                 return this.res.status(422).send({message:'User password mismatch'})
             }
 
@@ -29,7 +30,7 @@ class AuthController {
                 return this.res.status(400).send({message:'Unable to update user token'})
             }
             user = await User.findById(authUser._id)
-
+            console.log(user)
             this.res.send(user)
         } catch (error) {
             console.log(new Error(error))
@@ -40,9 +41,16 @@ class AuthController {
 
     async register(){
         try {
-            const {error} = userRequest.validateRegistration(this.body)
+            let {error} = request.validate(this.body)
             if(error) return this.res.status(422).send({message:error.details[0].message})
-            const user = await new User(this.body).save()
+
+            let {error1} = request.emailExists(this.body.email)
+            if(error1) return this.res.status(422).send({message:'Email already exists'})
+
+            let {error2} = request.usernameExists(this.body.username)
+            if(error2) return this.res.status(422).send({message:'Username already exists'})
+
+            const user = await new RegisteredUser(this.body).save()
             return this.res.send(user)
         } catch (error) {
             console.log(new Error(error))

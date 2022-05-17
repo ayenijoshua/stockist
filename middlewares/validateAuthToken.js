@@ -1,4 +1,4 @@
-const User = require('../models/user')
+const User = require('../models/registeredUser')
 
 module.exports = async function(req,res,next){
     let autTtoken = req.header('auth-token')

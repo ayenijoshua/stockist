@@ -14,6 +14,10 @@ const companySchema = mongoose.Schema(
             type:String,
             required:false
         },
+        smsMessage:{
+            type:String,
+            required:false
+        }
     }
 )
 

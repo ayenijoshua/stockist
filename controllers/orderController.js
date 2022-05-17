@@ -240,6 +240,35 @@ class OrderCntroller {
         }
     }
 
+    async monthlyProfit(){
+        try {
+            const month = new Date().getMonth() + 1
+            let orders = await Order.aggregate([{$match:{status:'approved'}},
+                    { $project: {totalPrice:1, month:{$month:"$created_at"}}  },
+                ])
+
+            const data = []
+
+            for(let i=1; i<=month; i++){
+               let temp = orders.filter(ele=>{
+                   return ele.month == i
+                })
+                
+               let profit = temp.map(ele=>ele.totalPrice).reduce((a,b)=>a+b,0)
+
+                data.push({
+                    month:i,
+                    profit:profit
+                })
+            }
+
+            return this.res.send(data)
+        } catch (error) {
+            console.error(error)
+            return this.res.status(500).send('An error occured while getting montly profit')
+        }
+    }
+
 
 }
 

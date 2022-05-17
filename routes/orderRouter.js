@@ -29,6 +29,10 @@ router.get('/totalSales', (req,res)=>{
     new OrderController(req,res).totalSales()
 })
 
+router.get('/monthly-profit', (req,res)=>{
+    new OrderController(req,res).monthlyProfit()
+})
+
 router.get('/', (req,res)=>{
     new OrderController(req,res).index()
 })

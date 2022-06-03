@@ -18,7 +18,7 @@ module.exports = class SmsController{
 
            const nums = user==null ? await PhoneNumber.find({smsCount:0}) : await PhoneNumber.find({user:user._id,smsCount:0})
            const msg = await SmsMessage.find()
-           if(nums.length > 0){
+           if(nums){
                let numbers = nums.map(function(ele){
                     return ele._id
                 })
@@ -26,7 +26,7 @@ module.exports = class SmsController{
                     phones: nums.map(function(ele){
                         return ele.phone
                     }).join(','),
-                    message: user==null ? msg[0].message : `${msg[0].message} To register: https://lilonghero.com?username=${user.username} For More Info: ${user.phone}`
+                    message: user==null ? msg[0].message : `${msg[0].message} To register: https://app.lilonghero.com/register/${user.username} For More Info: ${user.phone}`
                 }
                 if(await smsApi.sendSMS(data)){
                     numbers.forEach(async ele=>{

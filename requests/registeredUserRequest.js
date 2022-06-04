@@ -13,7 +13,7 @@ module.exports = {
             username: Joi.string().max(100).required(),
             password: Joi.string().required(),
             phone: Joi.string().required(),
-            referrer: Joi.optional(),
+            referrer: Joi.string().required(),
         });
         
         return schema.validate(data); 
@@ -21,26 +21,26 @@ module.exports = {
 
     async emailExists(email){
         userExists = await RegisteredUser.findOne({email:email})
-        if(userExists){
-            return true
+        if(userExists == null){
+            return false
         }
-        return false
+        return true
     },
 
     async usernameExists(username){
         userExists = await RegisteredUser.findOne({username:username})
-        if(userExists){
-            return true
+        if(userExists == null){
+            return false
         }
-        return false
+        return true
     },
 
     async referralExists(referral){
         userExists = await RegisteredUser.findOne({username:referral})
-        if(userExists){
-            return true
+        if(userExists == null){
+            return false
         }
-        return false
+        return true
     },
 
 }

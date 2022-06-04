@@ -6,8 +6,5 @@ router.get('/', (req,res)=>{
     new WebController().index(req,res)
 })
 
-router.get('*', (req,res)=>{
-    return res.render('not-found')
-})
 
 module.exports = router

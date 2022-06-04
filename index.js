@@ -22,6 +22,9 @@ require('./startup/logging')()
 require('./startup/db')()
 require('./startup/routes')(app)
 
+
+
+
 const server = app.listen(port, ()=>{
     winston.info("App running on "+port)
 })

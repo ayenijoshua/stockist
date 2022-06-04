@@ -14,14 +14,14 @@ class AuthController {
 
     async login(){
         try {
-            let authUser = await User.findOne({email:this.body.email})
+            let authUser = await User.findOne({email:this.body.email, password:this.body.password})
             if(!authUser){
-               return  this.res.status(422).send({message:'User Email not found'})
+               return  this.res.status(422).send({message:'Invalid credentials'})
             }
-            let pass = await User.findOne({password:this.body.password})
-            if(!pass){
-                return this.res.status(422).send({message:'User password mismatch'})
-            }
+            // let pass = await User.findOne({password:this.body.password})
+            // if(!pass){
+            //     return this.res.status(422).send({message:'User password mismatch'})
+            // }
 
             let token = Math.random() * 1000000000
 

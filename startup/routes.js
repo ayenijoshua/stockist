@@ -22,4 +22,8 @@ module.exports = function(app){
     app.use('/api/v1/phone-numbers',phoneNumbers)
     app.use('/api/v1/sms',sms)
     app.use('/api/v1/registered-users',registeredUsers)
+
+    app.use((req,res,next)=>{
+        return res.render('not-found')
+    })
 }

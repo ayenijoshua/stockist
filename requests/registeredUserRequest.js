@@ -35,4 +35,12 @@ module.exports = {
         return false
     },
 
+    async referralExists(referral){
+        userExists = await RegisteredUser.findOne({username:referral})
+        if(userExists){
+            return true
+        }
+        return false
+    },
+
 }

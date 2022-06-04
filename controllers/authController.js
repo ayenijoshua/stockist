@@ -44,11 +44,14 @@ class AuthController {
             let {error} = request.validate(this.body)
             if(error) return this.res.status(422).send({message:error.details[0].message})
 
-            let {error1} = request.emailExists(this.body.email)
+            let error1 = request.emailExists(this.body.email)
             if(error1) return this.res.status(422).send({message:'Email already exists'})
 
-            let {error2} = request.usernameExists(this.body.username)
+            let error2 = request.usernameExists(this.body.username)
             if(error2) return this.res.status(422).send({message:'Username already exists'})
+
+            let error3 = request.referralExists(this.body.referrer)
+            if(error3) return this.res.status(422).send({message:'Referrer does not exist'})
 
             const user = await new RegisteredUser(this.body).save()
             return this.res.send(user)

@@ -34,7 +34,7 @@ module.exports = class SmsController{
                     })
                     return this.res.send()
                 }
-                return this.res.status(400).send({message:'Error, unable to send sms'})
+                return this.res.status(400).send({message:'Error, Please try again'})
             }
            
            return this.res.status(400).send({message:'Phone number already recieved sms'})

@@ -30,7 +30,7 @@ class AuthController {
                 return this.res.status(400).send({message:'Unable to update user token'})
             }
             user = await User.findById(authUser._id)
-            console.log(user)
+            //console.log(user)
             this.res.send(user)
         } catch (error) {
             console.log(new Error(error))

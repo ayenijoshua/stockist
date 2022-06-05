@@ -31,8 +31,11 @@ module.exports = class RegisteredUserController{
 
     async referredMembers(){
         try {
+            //console.log(this.username)
             const members = await RegisteredUser.find({referrer:this.username}).select('-password')
+            console.log(members)
             return this.res.send(members)
+            
         } catch (error) {
             console.error(new Error(error))
             return this.res.status(500).send("An error occured while fetching downlines")

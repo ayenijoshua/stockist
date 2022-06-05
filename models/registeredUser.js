@@ -24,6 +24,10 @@ const registeredUserSchema = mongoose.Schema(
             type:String,
             required:true
         },
+        state:{
+            type:String,
+            required:true
+        },
         referrer:{
             type:String,
             //required:true
@@ -35,6 +39,7 @@ const registeredUserSchema = mongoose.Schema(
         token:{
             type:String
         },
+        
         createdAt:{
             type:Date,
             default: Date.now

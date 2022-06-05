@@ -14,6 +14,7 @@ module.exports = {
             password: Joi.string().required(),
             phone: Joi.string().required(),
             referrer: Joi.string().required(),
+            state: Joi.string().required(),
         });
         
         return schema.validate(data); 

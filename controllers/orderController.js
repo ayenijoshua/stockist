@@ -9,7 +9,7 @@ const config = require('config');
 const { map } = require('lodash')
 
 const db = config.get('db')
-Fawn.init(db)
+//Fawn.init(db)
 
 class OrderCntroller {
 

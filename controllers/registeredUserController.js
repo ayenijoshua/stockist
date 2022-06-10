@@ -114,12 +114,28 @@ module.exports = class RegisteredUserController{
     async searchByDate()
     {
         try {
-            let users = await RegisteredUser.find({isAdmin:false, createdAt:{$gte:new Date(this.query.date_from).toISOString(), 
-                $lte:new Date(this.query.date_to).toISOString()}}).select(['-token','-password'])
+            let users = await RegisteredUser.find({isAdmin:false, 
+                createdAt:{
+                    $gte:new Date(this.query.date_from).toISOString(), 
+                    $lte:new Date(this.query.date_to).toISOString()
+                },
+                username:this.query.username
+            }).select(['-token','-password'])
             return this.res.send(users)
         } catch (error) {
             console.error(new Error(error))
-            return this.res.status(500).send("An error occured while searching by date")
+            return this.res.status(500).send("An error occured while searching")
         }
     }
+
+    // async searchByUsername()
+    // {
+    //     try {
+    //         let users = await RegisteredUser.find({isAdmin:false, username:this.body.username}).select(['-token','-password'])
+    //         return this.res.send(users)
+    //     } catch (error) {
+    //         console.error(new Error(error))
+    //         return this.res.status(500).send("An error occured while searching by username")
+    //     }
+    // }
 }

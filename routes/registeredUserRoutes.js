@@ -26,5 +26,9 @@ router.get('/search', (req,res)=>{
     new RegisteredUserController(req,res).searchByDate()
 })
 
+// router.get('/search-username', (req,res)=>{
+//     new RegisteredUserController(req,res).searchByUsername()
+// })
+
 
 module.exports = router

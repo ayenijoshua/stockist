@@ -44,4 +44,13 @@ module.exports = {
         return true
     },
 
+    resetPassword(data){
+        const schema = Joi.object().keys({
+            password: Joi.string().required(),
+            password_confirmation: Joi.string().required(),
+        });
+        
+        return schema.validate(data); 
+    },
+
 }

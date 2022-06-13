@@ -1,6 +1,7 @@
 const User = require('../models/registeredUser')
 const RegisteredUser = require('../models/registeredUser')
 const request = require('../requests/registeredUserRequest')
+const { send } = require('./emailController')
 
 class AuthController {
 
@@ -84,6 +85,63 @@ class AuthController {
             return this.res.status(500).send({message:'An error occured while logging out'})
         }
         
+    }
+
+    async forgotPasswordLink(){
+        try {
+            const email = await RegisteredUser.findOne({email:this.body.email})
+            if(!email){
+                return this.res.status(400).send({message:'Email does not exist'})
+            }
+
+            let token = Math.random() * 1000000000
+            await RegisteredUser.findByIdAndUpdate(email._id,{token:token});
+
+            let data = {
+                recipient: 'joshua@glade.ng',
+                subject:"LILONG-HERO Reset Password",
+                html:`<div>
+                        <h3>Forgot your password?</h3>
+                        <p>We recieved a request to reset the password for your account.
+                        To reset your password, click this 
+                        <a href="http://localhost:8080/reset-password/${token}"> Reset Password </a> to reset your password.
+                        if this was a mistake, just ignore this email and nothing will happen.
+                        </p> 
+                      </div>`          
+                }
+
+            if(! await send(data)){
+                return this.res.status(400).send({message:'Error Unable to send mail'})
+            }
+            return this.res.send()
+            
+        } catch (error) {
+            console.log(new Error(error))
+            return this.res.status(500).send({message:'An error occured while resetting password'})   
+        }
+    }
+
+    async resetPassword(){
+        try {
+            delete this.body.token
+            const {error} = request.resetPassword(this.body)
+            if(error) return this.res.status(422).send({message:error.details[0].message})
+
+            if(this.body.password != this.body.password_confirmation){
+                return this.res.status(422).send({message:'Password and its confirmation are not equal'})
+            }
+
+            let id = this.req.token._id
+            if(! await RegisteredUser.findByIdAndUpdate(id,{password:this.body.password})){
+                return  this.res.status(400).send({message:'Unable to change password, please try again'})
+            }
+
+            return this.res.send()
+
+        } catch (error) {
+            console.log(new Error(error))
+            return this.res.status(500).send({message:'An error occured while updating password'})   
+        }
     }
 }
 

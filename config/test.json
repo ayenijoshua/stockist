@@ -1,5 +1,14 @@
 {
     "port":3001,
     "jwtSecretKey":"12345",
-    "db":"mongodb://localhost/stockiest_test"
+    "db":"mongodb://localhost/stockiest_test",
+    "origin":"*",
+    "smartSMSToken":"1234",
+    "MAIL_USERNAME":"lilonghero.customercare@gmail.com",
+    "MAIL_PASSWORD":"lilonghero2022",
+    "OAUTH_CLIENTID":"411469772448-el9d2kv845r6i23pp1bbvkoc1bqvpdps.apps.googleusercontent.com",
+    "OAUTH_CLIENT_SECRET":"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",
+    "OAUTH_REFRESH_TOKEN":"1//04yLs1bBkQ2LGCgYIARAAGAQSNwF-L9IrvnvLzSbo_JNZpuLsg5s5LMPJ-opoMzzTCVZkUbsdwXCKr3H7_t6l_qhxOj_7FAXkbxU",
+    "MAILGUN_API_KEY":"key-d0071eadf7e5d4c73432ac2cdae16c4e",
+    "DOMAIN_NAME":"lilonghero.com"
 }

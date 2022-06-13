@@ -114,7 +114,8 @@ module.exports = class RegisteredUserController{
     async searchByDate()
     {
         try {
-            if( typeof this.query.date_from != 'null' && typeof this.query.date_to != 'null' && typeof this.query.username !== 'null'){
+            //console.log(new Date(this.query.date_from).toISOString())
+            if( this.query.date_from != 'null' &&  this.query.date_to != 'null' && this.query.username !== 'null'){
                 var users = await RegisteredUser.find({isAdmin:false, 
                     createdAt:{
                         $gte:new Date(this.query.date_from).toISOString(), 
@@ -124,7 +125,7 @@ module.exports = class RegisteredUserController{
                 }).select(['-token','-password'])
             }
 
-            else if( typeof this.query.date_from != 'null' && typeof this.query.date_to != 'null'){
+            else if( this.query.date_from !== 'null' &&  this.query.date_to !== 'null'){
                 var users = await RegisteredUser.find({isAdmin:false, 
                     createdAt:{
                         $gte:new Date(this.query.date_from).toISOString(), 

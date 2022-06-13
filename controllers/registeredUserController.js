@@ -114,7 +114,7 @@ module.exports = class RegisteredUserController{
     async searchByDate()
     {
         try {
-            if( typeof this.query.date_from == 'null' && typeof this.query.date_to == 'null'){
+            if( typeof this.query.date_from == 'null' && typeof this.query.date_to == 'null' && typeof this.query.username !== 'null'){
                 var users = await RegisteredUser.find({isAdmin:false, 
                     createdAt:{
                         $gte:new Date(this.query.date_from).toISOString(), 

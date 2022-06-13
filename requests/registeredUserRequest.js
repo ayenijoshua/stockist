@@ -53,4 +53,13 @@ module.exports = {
         return schema.validate(data); 
     },
 
+    search(data){
+        const schema = Joi.object().keys({
+            password: Joi.string().required(),
+            password_confirmation: Joi.string().required(),
+        });
+        
+        return schema.validate(data); 
+    },
+
 }

@@ -114,13 +114,18 @@ module.exports = class RegisteredUserController{
     async searchByDate()
     {
         try {
-            let users = await RegisteredUser.find({isAdmin:false, 
-                createdAt:{
-                    $gte:new Date(this.query.date_from).toISOString(), 
-                    $lte:new Date(this.query.date_to).toISOString()
-                },
-                username:this.query.username
-            }).select(['-token','-password'])
+            if( typeof this.query.date_from == 'null' && typeof this.query.date_to == 'null'){
+                var users = await RegisteredUser.find({isAdmin:false, 
+                    createdAt:{
+                        $gte:new Date(this.query.date_from).toISOString(), 
+                        $lte:new Date(this.query.date_to).toISOString()
+                    },
+                    username:this.query.username
+                }).select(['-token','-password'])
+            }else{
+                var users = await RegisteredUser.find({isAdmin:false, username:this.query.username}).select(['-token','-password'])
+            }
+            
             return this.res.send(users)
         } catch (error) {
             console.error(new Error(error))

@@ -98,13 +98,13 @@ class AuthController {
             await RegisteredUser.findByIdAndUpdate(email._id,{token:token});
 
             let data = {
-                recipient: 'joshua@glade.ng',
+                recipient: this.body.email,
                 subject:"LILONG-HERO Reset Password",
                 html:`<div>
                         <h3>Forgot your password?</h3>
                         <p>We recieved a request to reset the password for your account.
                         To reset your password, click this 
-                        <a href="http://localhost:8080/reset-password/${token}"> Reset Password </a> to reset your password.
+                        <a href="http://app.lilonghero.com/reset-password/${token}"> Reset Password </a> to reset your password.
                         if this was a mistake, just ignore this email and nothing will happen.
                         </p> 
                       </div>`          

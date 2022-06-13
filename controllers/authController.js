@@ -103,9 +103,9 @@ class AuthController {
                 html:`<div>
                         <h3>Forgot your password?</h3>
                         <p>We recieved a request to reset the password for your account.
-                        To reset your password, click this 
-                        <a href="http://app.lilonghero.com/reset-password/${token}"> Reset Password </a> to reset your password.
-                        if this was a mistake, just ignore this email and nothing will happen.
+                        <br>To reset your password, click this 
+                        <a href="http://app.lilonghero.com/reset-password/${token}"> link </a> to reset your password. Reset Password
+                        <br>if this was a mistake, just ignore this email and nothing will happen.
                         </p> 
                       </div>`          
                 }

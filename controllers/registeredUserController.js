@@ -2,6 +2,8 @@ const RegisteredUser = require('../models/registeredUser')
 const PhoneNumber = require('../models/phoneNumber')
 const phoneNumbepRequest = require('../requests/phoneNumberRequest')
 const SmsController = require('../controllers/smsController')
+const SmsMessage = require('../models/smsMessage')
+const smsApi = require('../external-api/smart-sms-solutions')
 
 module.exports = class RegisteredUserController{
 
@@ -82,7 +84,26 @@ module.exports = class RegisteredUserController{
                 }
             });
 
-            new SmsController(this.req,this.res).sendSms(user)
+            const msg = await SmsMessage.find()
+
+            if(msg.length > 0){
+                let data = {
+                    phones: phones.map(function(ele){
+                        return ele.phone
+                    }).join(','),
+                    message: user==null ? msg[0].message : `${msg[0].message} To register: https://app.lilonghero.com/register/${user.username} For More Info: ${user.phone}`
+                }
+    
+                if(await smsApi.sendSMS(data)){
+                    return this.res.send()
+                }else{
+                    return this.res.status(400).send({message:'Please Kindly try again'})
+                }
+            }else{
+                return this.res.status(400).send({message:'SMS configuration not set'})
+            }
+
+            //new SmsController(this.req,this.res).sendSms(user)
 
             //return this.res.send()
         } catch (error) {

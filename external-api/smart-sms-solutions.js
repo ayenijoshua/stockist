@@ -28,6 +28,7 @@ module.exports = smartSMS  = {
       if(res.data.code == 1000){
           return true 
       }
+      console.log(res.data)
       return false
     },
 

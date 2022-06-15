@@ -19,7 +19,7 @@ module.exports = class SmsController{
            const nums = user==null ? await PhoneNumber.find({smsCount:0}) : await PhoneNumber.find({user:user._id,smsCount:0})
            const msg = await SmsMessage.find()
            console.log(nums)
-           if(nums){
+           if(nums.length > 0){
                let numbers = nums.map(function(ele){
                     return ele._id
                 })

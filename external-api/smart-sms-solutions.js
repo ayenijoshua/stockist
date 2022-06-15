@@ -24,6 +24,7 @@ Password: Vonoctavon25
 module.exports = smartSMS  = {
 
     async sendSMS(data){
+        console.log(res.data)
       const res = await axios.get(`${baseUrl}/sms?to=${data.phones}&token=${apiToken}&sender=LILONGHERO&message=${data.message}&routing=5`)
       if(res.data.code == 1000){
           return true 

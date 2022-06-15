@@ -87,7 +87,7 @@ module.exports = class RegisteredUserController{
             const msg = await SmsMessage.find()
 
             if(msg.length > 0){
-                console.log(phones)
+                //console.log(phones)
                 let data = {
                     phones: this.body.phones,
                     message: user==null ? msg[0].message : `${msg[0].message} To register: https://app.lilonghero.com/register/${user.username} For More Info: ${user.phone}`

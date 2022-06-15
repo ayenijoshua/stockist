@@ -29,7 +29,7 @@ module.exports = class SmsController{
                     message: user==null ? msg[0].message : `${msg[0].message} To register: https://app.lilonghero.com/register/${user.username} For More Info: ${user.phone}`
                 }
 
-                if(typeof data.phones !== 'string' ){
+                if(typeof data.phones !== 'string' ||  data.phones === "" || !data.phones){
                     return this.res.status(400).send({message:'Please Kindly try again'})
                 }
 

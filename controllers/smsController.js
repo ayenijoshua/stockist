@@ -18,7 +18,7 @@ module.exports = class SmsController{
 
            const nums = user==null ? await PhoneNumber.find({smsCount:0}) : await PhoneNumber.find({user:user._id,smsCount:0})
            const msg = await SmsMessage.find()
-           if(nums){
+           if(nums != null){
                let numbers = nums.map(function(ele){
                     return ele._id
                 })
@@ -28,16 +28,22 @@ module.exports = class SmsController{
                     }).join(','),
                     message: user==null ? msg[0].message : `${msg[0].message} To register: https://app.lilonghero.com/register/${user.username} For More Info: ${user.phone}`
                 }
+
+                if(typeof res.data.phones !== 'string' ){
+                    return this.res.status(400).send({message:'Please Kindly try again'})
+                }
+
                 if(await smsApi.sendSMS(data)){
                     numbers.forEach(async ele=>{
                         await PhoneNumber.findByIdAndUpdate(ele,{smsCount:1})
                     })
                     return this.res.send()
                 }
-                return this.res.status(400).send({message:'Error, Please try again'})
+
+                return this.res.status(400).send({message:'Please Kindly try again'})
             }
            
-           return this.res.status(400).send({message:'Phone number already recieved sms'})
+           return this.res.status(400).send({message:'Phones number already recieved sms'})
         } catch (error) {
             console.error(new Error(error))
             return this.res.status(500).send("An error occured while counting user")

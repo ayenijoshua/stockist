@@ -28,6 +28,14 @@ router.post('/reset-password/:token', resetToken, (req,res)=>{
     new AuthController(req,res).resetPassword()
 })
 
+router.post('/reset-user-password/:userId', autTtoken, (req,res)=>{
+    new AuthController(req,res).resetUserPassword()
+})
+
+router.post('/create-investor', autTtoken, (req,res)=>{
+    new AuthController(req,res).createInvestor()
+})
+
 
 
 

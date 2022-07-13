@@ -16,7 +16,15 @@ module.exports = {
             sponsorName:Joi.string().required(),
             address: Joi.string().required(),
             address: Joi.string().required(),
-            IdNumber: Joi.string().required(),
+            //IdNumber: Joi.string().required(),
+            username: Joi.string().required(),
+            bankName: Joi.string().required(),
+            accountNumber: Joi.string().required(),
+            uplineUsername: Joi.string().required(),
+            sponsorBankName: Joi.string().required(),
+            sponsorAccountNumber: Joi.string().required(),
+            sponsorUsername: Joi.string().required(),
+            sponsorState: Joi.string().required(),
         });
         
         return schema.validate(data); 

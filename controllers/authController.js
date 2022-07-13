@@ -143,6 +143,51 @@ class AuthController {
             return this.res.status(500).send({message:'An error occured while updating password'})   
         }
     }
+
+    async resetUserPassword(){
+        try {
+            //let id = this.req.params.userId
+            delete this.body.userId
+            const {error} = request.resetPassword(this.body)
+            if(error) return this.res.status(422).send({message:error.details[0].message})
+
+            if(this.body.password != this.body.password_confirmation){
+                return this.res.status(422).send({message:'Password and its confirmation are not equal'})
+            }
+
+            let id = this.req.params.userId
+            if(! await RegisteredUser.findByIdAndUpdate(id,{password:this.body.password})){
+                return  this.res.status(400).send({message:'Unable to change password, please try again'})
+            }
+
+            return this.res.send()
+
+        } catch (error) {
+            console.log(new Error(error))
+            return this.res.status(500).send({message:'An error occured while updating password'})   
+        }
+    }
+
+    async createInvestor(){
+        try {
+            let {error} = request.validate(this.body)
+            if(error) return this.res.status(422).send({message:error.details[0].message})
+
+            let error1 = await request.emailExists(this.body.email)
+            if(error1==true) return this.res.status(422).send({message:'Email already exists'})
+
+            let error2 = await request.usernameExists(this.body.username)
+            if(error2==true) return this.res.status(422).send({message:'Username already exists'})
+
+            this.body.isInvestor = true
+            const user = await new RegisteredUser(this.body).save()
+            return this.res.send(user)
+
+        } catch (error) {
+            console.log(new Error(error))
+            return this.res.status(500).send({message:'An error occured while logging out'})
+        }
+    }
 }
 
 module.exports = AuthController

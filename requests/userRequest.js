@@ -14,8 +14,16 @@ module.exports = {
             state: Joi.string().required(),
             phone: Joi.string().required(),
             sponsorName: Joi.string().required(),
-            idNumber: Joi.string().required(),
-            deliveryType: Joi.string().required()
+            //idNumber: Joi.string().required(),
+            deliveryType: Joi.string().required(),
+            username: Joi.string().required(),
+            bankName: Joi.string().required(),
+            accountNumber: Joi.string().required(),
+            uplineUsername: Joi.string().required(),
+            sponsorBankName: Joi.string().required(),
+            sponsorAccountNumber: Joi.string().required(),
+            sponsorUsername: Joi.string().required(),
+            sponsorState: Joi.string().required(),
         });
         
         return schema.validate(data); 

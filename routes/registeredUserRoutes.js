@@ -26,9 +26,13 @@ router.get('/search', (req,res)=>{
     new RegisteredUserController(req,res).searchByDate()
 })
 
-// router.get('/search-username', (req,res)=>{
-//     new RegisteredUserController(req,res).searchByUsername()
-// })
+router.get('/investors', (req,res)=>{
+    new RegisteredUserController(req,res).investors()
+})
+
+router.get('/total', (req,res)=>{
+    new RegisteredUserController(req,res).total()
+})
 
 
 module.exports = router

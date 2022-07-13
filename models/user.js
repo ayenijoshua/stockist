@@ -28,13 +28,7 @@ const userSchema = mongoose.Schema(
             type:String,
             required:true
         },
-        sponsorName:{
-            type:String,
-            required:true
-        },
-        idNumber:{
-            type:String
-        },
+        
         isAdmin:{
             type:Boolean,
             default:false
@@ -51,7 +45,37 @@ const userSchema = mongoose.Schema(
         },
         token:{
             type:String
-        }
+        },
+        username:{
+            type:String
+        },
+        bankName:{
+            type:String
+        },
+        accountNumber:{
+            type:String
+        },
+        uplineUsername:{
+            type:String
+        },
+        sponsorName:{
+            type:String
+        },
+
+        sponsorUsername:{
+            type:String
+        },
+        sponsorBankName:{
+            type:String
+        },
+        sponsorAccountNumber:{
+            type:String
+        },
+
+        sponsorState:{
+            type:String
+        },
+
     }
 )
 

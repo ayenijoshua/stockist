@@ -36,6 +36,10 @@ const registeredUserSchema = mongoose.Schema(
             type:Boolean,
             default:false
         },
+        isInvestor:{
+            type:Boolean,
+            default:false
+        },
         token:{
             type:String
         },

@@ -20,7 +20,7 @@ module.exports = class RegisteredUserController{
         try {
             let pageNum = this.query.pageNum || 1
             let pageSize = this.query.pageSize || 100
-            let users = await RegisteredUser.find({isAdmin:false}).select(['-password','-token'])
+            let users = await RegisteredUser.find({isAdmin:false,isInvestor:false}).select(['-password','-token'])
                 .skip((pageNum-1)*pageSize)
                 .limit(pageSize)
             return this.res.send(users)
@@ -136,7 +136,7 @@ module.exports = class RegisteredUserController{
         try {
             //console.log(new Date(this.query.date_from).toISOString())
             if( this.query.date_from != 'null' &&  this.query.date_to != 'null' && this.query.username !== 'null'){
-                var users = await RegisteredUser.find({isAdmin:false, 
+                var users = await RegisteredUser.find({isAdmin:false, isInvestor:false, 
                     createdAt:{
                         $gte:new Date(this.query.date_from).toISOString(), 
                         $lte:new Date(this.query.date_to).toISOString()
@@ -146,7 +146,7 @@ module.exports = class RegisteredUserController{
             }
 
             else if( this.query.date_from !== 'null' &&  this.query.date_to !== 'null'){
-                var users = await RegisteredUser.find({isAdmin:false, 
+                var users = await RegisteredUser.find({isAdmin:false, isInvestor:false,
                     createdAt:{
                         $gte:new Date(this.query.date_from).toISOString(), 
                         $lte:new Date(this.query.date_to).toISOString()
@@ -155,11 +155,11 @@ module.exports = class RegisteredUserController{
             }
 
             else if( typeof this.query.username != 'null'){
-                var users = await RegisteredUser.find({isAdmin:false, username:this.query.username}).select(['-token','-password'])
+                var users = await RegisteredUser.find({isAdmin:false,isInvestor:false, username:this.query.username}).select(['-token','-password'])
             }
 
             else{
-                var users = await RegisteredUser.find({isAdmin:false}).select(['-token','-password'])
+                var users = await RegisteredUser.find({isAdmin:false,isInvestor:false,}).select(['-token','-password'])
             }
             
             return this.res.send(users)
@@ -169,14 +169,24 @@ module.exports = class RegisteredUserController{
         }
     }
 
-    // async searchByUsername()
-    // {
-    //     try {
-    //         let users = await RegisteredUser.find({isAdmin:false, username:this.body.username}).select(['-token','-password'])
-    //         return this.res.send(users)
-    //     } catch (error) {
-    //         console.error(new Error(error))
-    //         return this.res.status(500).send("An error occured while searching by username")
-    //     }
-    // }
+    async investors()
+    {
+        try {
+            let users = await RegisteredUser.find({isInvestor:true}).select(['-token','-password'])
+            return this.res.send(users)
+        } catch (error) {
+            console.error(new Error(error))
+            return this.res.status(500).send("An error occured while fetching investors")
+        }
+    }
+
+    async total(){
+        try {
+            const total = await RegisteredUser.find({isAdmin:false,isInvestor:false}).count()
+            return this.res.send({total:total})
+        } catch (error) {
+            console.error(new Error(error))
+            return this.res.status(500).send("An error occured while counting total memebers")
+        }
+    }
 }

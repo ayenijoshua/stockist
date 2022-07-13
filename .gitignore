@@ -10,3 +10,4 @@ uploads
 tests/images
 mongo-atlas db.txt
 public/products/
+external-api/mailer.js

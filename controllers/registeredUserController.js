@@ -165,7 +165,45 @@ module.exports = class RegisteredUserController{
             return this.res.send(users)
         } catch (error) {
             console.error(new Error(error))
-            return this.res.status(500).send("An error occured while searching")
+            return this.res.status(500).send("An error occured while searching members")
+        }
+    }
+
+    async searchInvestor()
+    {
+        try {
+            //console.log(new Date(this.query.date_from).toISOString())
+            if( this.query.date_from != 'null' &&  this.query.date_to != 'null' && this.query.username !== 'null'){
+                var users = await RegisteredUser.find({isAdmin:false, isInvestor:true, 
+                    createdAt:{
+                        $gte:new Date(this.query.date_from).toISOString(), 
+                        $lte:new Date(this.query.date_to).toISOString()
+                    },
+                    username:this.query.username
+                }).select(['-token','-password'])
+            }
+
+            else if( this.query.date_from !== 'null' &&  this.query.date_to !== 'null'){
+                var users = await RegisteredUser.find({isAdmin:false, isInvestor:true,
+                    createdAt:{
+                        $gte:new Date(this.query.date_from).toISOString(), 
+                        $lte:new Date(this.query.date_to).toISOString()
+                    },
+                }).select(['-token','-password'])
+            }
+
+            else if( typeof this.query.username != 'null'){
+                var users = await RegisteredUser.find({isAdmin:false,isInvestor:true, username:this.query.username}).select(['-token','-password'])
+            }
+
+            else{
+                var users = await RegisteredUser.find({isAdmin:false,isInvestor:true,}).select(['-token','-password'])
+            }
+            
+            return this.res.send(users)
+        } catch (error) {
+            console.error(new Error(error))
+            return this.res.status(500).send("An error occured while searching Investors")
         }
     }
 
@@ -187,6 +225,20 @@ module.exports = class RegisteredUserController{
         } catch (error) {
             console.error(new Error(error))
             return this.res.status(500).send("An error occured while counting total memebers")
+        }
+    }
+
+    async deleteUser()
+    {
+        try {
+            const remove = await RegisteredUser.findByIdAndDelete(this.id)
+            if(! remove){
+                return this.res.send({message:'User not found'})
+            }
+            return this.res.send({message:'User delete successfully'})
+        } catch (error) {
+            console.error(new Error(error))
+            return this.res.status(500).send("An error occured while deleting investors")
         }
     }
 }

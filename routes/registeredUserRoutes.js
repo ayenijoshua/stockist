@@ -26,12 +26,20 @@ router.get('/search', (req,res)=>{
     new RegisteredUserController(req,res).searchByDate()
 })
 
+router.get('/search-investor', (req,res)=>{
+    new RegisteredUserController(req,res).searchInvestor()
+})
+
 router.get('/investors', (req,res)=>{
     new RegisteredUserController(req,res).investors()
 })
 
 router.get('/total', (req,res)=>{
     new RegisteredUserController(req,res).total()
+})
+
+router.delete('/:id', (req,res)=>{
+    new RegisteredUserController(req,res).deleteUser()
 })
 
 

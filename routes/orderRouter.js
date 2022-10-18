@@ -9,7 +9,7 @@ const router = express.Router()
 const upload = multer().single('image')
 
 
-router.post('/search', (req,res)=>{
+router.get('/search', (req,res)=>{
     new OrderController(req,res).searchOrder()
 })
 

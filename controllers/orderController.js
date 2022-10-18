@@ -1,6 +1,7 @@
 const Order = require('../models/order')
 const Product = require('../models/product')
 const User = require('../models/user')
+
 const winston = require('winston')
 const request = require('../requests/orderRequest')
 const mongoose = require('mongoose')
@@ -215,8 +216,43 @@ class OrderCntroller {
 
     async searchOrder(){
         try {
-            let orders = await Order.find({created_at:{$gte:new Date(this.body.from_date).toISOString(), 
-                $lte:new Date(this.body.to_date).toISOString()}}).populate('user').select(['-token','-password'])
+            //console.log(this.query.username)
+            if(this.query.from_date !== 'null' &&  this.query.to_date !== 'null' && this.query.username !== 'null'){
+                let user = await User.findOne({username:this.query.username})
+                let userId = null
+                if(user){
+                    userId = user._id
+                }
+                var orders = await Order.find(
+                {created_at:{
+                    $gte:new Date(this.query.from_date).toISOString(), 
+                    $lte:new Date(this.query.to_date).toISOString()
+                },
+                user: userId
+                }).populate('user').select(['-token','-password'])
+            }
+            else if( this.query.from_date !== 'null' &&  this.query.to_date !== 'null'){
+                var orders = await Order.find(
+                {created_at:{
+                    $gte:new Date(this.query.from_date).toISOString(), 
+                    $lte:new Date(this.query.to_date).toISOString()
+                },
+                }).populate('user').select(['-token','-password'])
+            }
+            else if( typeof this.query.username !== 'null'){
+                let user = await User.findOne({name:this.query.username})
+                //console.log(user)
+                let userId = null
+                if(user){
+                    userId = user._id
+                }
+                var orders = await Order.find({user:userId}).populate('user').select(['-token','-password'])
+            }
+
+            else{
+                var orders = await Order.find({}).populate('user').select(['-token','-password'])
+            }
+
             return this.res.send(orders)
         } catch (error) {
             console.error(error)
